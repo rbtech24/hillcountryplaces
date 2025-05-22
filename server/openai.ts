@@ -1,9 +1,18 @@
 import OpenAI from "openai";
 
-// Initialize the OpenAI client with the API key from environment variables
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Initialize the OpenAI client with the API key from environment variables if available
+let openai: OpenAI | null = null;
+try {
+  if (process.env.OPENAI_API_KEY) {
+    openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  } else {
+    console.log("OpenAI API key not found. Travel assistant will use fallback responses.");
+  }
+} catch (error) {
+  console.error("Error initializing OpenAI client:", error);
+}
 
 // System prompt for the AI travel assistant
 const SYSTEM_PROMPT = `
@@ -54,7 +63,13 @@ export async function chatWithTravelAssistant(messages: Array<{role: string, con
     });
 
     try {
-      // Call the OpenAI API
+      // Check if OpenAI client is available
+      if (!openai) {
+        console.log("OpenAI client not initialized, using local response");
+        return getLocalTravelResponse(userMessage);
+      }
+      
+      // Call the OpenAI API with the initialized client
       const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo", // Using a more reliable model
         messages: formattedMessages,
