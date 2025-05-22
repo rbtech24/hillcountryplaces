@@ -3,8 +3,8 @@ services:
   - type: web
     name: texas-hill-country
     env: node
-    buildCommand: node build.js
-    startCommand: NODE_ENV=production node dist/index.js
+    buildCommand: ./render-build.sh
+    startCommand: ./render-start.sh
     envVars:
       - key: NODE_ENV
         value: production
