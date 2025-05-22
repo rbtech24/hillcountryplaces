@@ -26,8 +26,8 @@ const SearchBox = () => {
     } else if (searchTerm.includes("attraction") || searchTerm.includes("visit") || searchTerm.includes("see")) {
       setLocation(`/attractions?${params.toString()}`);
     } else {
-      // Default to a general search across all content
-      setLocation(`/search?${params.toString()}`);
+      // Default to searching destinations instead of a general search page
+      setLocation(`/destinations?${params.toString()}`);
     }
   };
 
