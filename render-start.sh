@@ -1,5 +1,8 @@
 #!/bin/bash
-set -e
+# Start script for Render deployment
+
+# Set NODE_ENV if not already set
+export NODE_ENV=production
 
 # Start the application
-NODE_ENV=production node dist/index.js
+node dist/server/index.js

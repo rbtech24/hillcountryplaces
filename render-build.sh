@@ -1,18 +1,16 @@
 #!/bin/bash
-set -e
+# Build script for Render deployment
 
 # Install dependencies
 npm install
 
-# Install Vite and ESBuild globally
-npm install -g vite esbuild
+# Build frontend (Vite)
+npm run build
 
-# Build frontend
-echo "Building frontend..."
-./node_modules/.bin/vite build
+# Compile TypeScript for backend
+npx tsc --project tsconfig.production.json
 
-# Build backend
-echo "Building backend..."
-./node_modules/.bin/esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+# Copy package.json to dist folder for proper Node module resolution
+cp package.json dist/
 
 echo "Build completed successfully!"
