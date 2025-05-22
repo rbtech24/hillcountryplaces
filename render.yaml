@@ -3,8 +3,8 @@ services:
   - type: web
     name: texas-hill-country
     env: node
-    buildCommand: chmod +x render-build.sh && ./render-build.sh
-    startCommand: chmod +x render-start.sh && ./render-start.sh
+    buildCommand: npm install && npx vite build && npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+    startCommand: node dist/index.js
     envVars:
       - key: NODE_ENV
         value: production
