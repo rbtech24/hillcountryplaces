@@ -3,7 +3,7 @@ services:
   - type: web
     name: texas-hill-country
     env: node
-    buildCommand: npm install && npx vite build && npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+    buildCommand: npm install && node build-custom.js
     startCommand: NODE_ENV=production node dist/index.js
     envVars:
       - key: NODE_ENV
