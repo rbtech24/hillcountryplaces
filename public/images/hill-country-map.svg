@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Map Background -->
+  <rect width="1200" height="800" fill="#edf2f7" />
+  
+  <!-- Hill Country Region - simplified shape -->
+  <path d="M200,200 C300,150 400,100 600,150 C800,200 900,250 1000,300 C1050,350 1100,400 1050,500 C1000,600 900,650 800,700 C700,720 600,730 500,700 C400,670 300,600 250,500 C200,400 150,300 200,200 Z" 
+    fill="#c6f6d5" stroke="#38a169" stroke-width="3" />
+  
+  <!-- Rivers - Simplified -->
+  <path d="M400,200 C450,300 500,400 450,500 C420,550 400,600 350,650" 
+    fill="none" stroke="#4299e1" stroke-width="4" stroke-dasharray="1, 0" />
+  <path d="M700,200 C650,300 620,350 650,450 C670,500 700,550 750,600" 
+    fill="none" stroke="#4299e1" stroke-width="4" stroke-dasharray="1, 0" />
+    
+  <!-- Roads -->
+  <path d="M300,250 C400,300 500,320 600,350 C700,380 800,400 900,450" 
+    fill="none" stroke="#a0aec0" stroke-width="5" stroke-dasharray="5, 5" />
+  <path d="M500,200 C520,300 530,400 520,500 C510,600 490,650 450,700" 
+    fill="none" stroke="#a0aec0" stroke-width="5" stroke-dasharray="5, 5" />
+  <path d="M800,250 C750,350 700,420 650,500 C600,580 550,650 500,700" 
+    fill="none" stroke="#a0aec0" stroke-width="5" stroke-dasharray="5, 5" />
+    
+  <!-- Compass -->
+  <circle cx="1000" cy="700" r="50" fill="white" stroke="#4a5568" stroke-width="2" />
+  <path d="M1000,650 L1000,750 M950,700 L1050,700" stroke="#4a5568" stroke-width="2" />
+  <text x="1000" y="680" font-family="Arial" font-size="20" text-anchor="middle" fill="#4a5568">N</text>
+  <text x="1000" y="730" font-family="Arial" font-size="20" text-anchor="middle" fill="#4a5568">S</text>
+  <text x="1020" y="700" font-family="Arial" font-size="20" text-anchor="middle" fill="#4a5568">E</text>
+  <text x="980" y="700" font-family="Arial" font-size="20" text-anchor="middle" fill="#4a5568">W</text>
+  
+  <!-- Title -->
+  <text x="600" y="80" font-family="Arial" font-size="40" font-weight="bold" text-anchor="middle" fill="#2d3748">Texas Hill Country</text>
+</svg>
