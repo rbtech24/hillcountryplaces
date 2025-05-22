@@ -4,11 +4,14 @@
 # Install dependencies
 npm install
 
-# Build frontend (Vite)
-npm run build
+# Install Vite globally (needed for the build)
+npm install -g vite
 
-# Compile TypeScript for backend
-npx tsc --project tsconfig.production.json
+# Build frontend with Vite explicitly
+npx vite build
+
+# Use esbuild for the server
+npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
 
 # Copy package.json to dist folder for proper Node module resolution
 cp package.json dist/
