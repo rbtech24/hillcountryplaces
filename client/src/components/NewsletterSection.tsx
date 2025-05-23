@@ -47,14 +47,14 @@ const NewsletterSection = () => {
   };
 
   return (
-    <section className="py-16 bg-primary text-white">
+    <section className="py-10 sm:py-12 md:py-16 bg-primary text-white">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">Stay Updated on Hill Country Events</h2>
-          <p className="text-xl opacity-90 mb-8">Join our newsletter for seasonal updates, special promotions, and insider travel tips for the Texas Hill Country.</p>
+          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">Stay Updated on Hill Country Events</h2>
+          <p className="text-base sm:text-lg md:text-xl opacity-90 mb-6 sm:mb-8 px-2">Join our newsletter for seasonal updates, special promotions, and insider travel tips for the Texas Hill Country.</p>
           
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col md:flex-row gap-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col md:flex-row gap-3 sm:gap-4 max-w-xl mx-auto">
               <FormField
                 control={form.control}
                 name="email"
@@ -64,7 +64,8 @@ const NewsletterSection = () => {
                       <Input 
                         placeholder="Your email address" 
                         {...field} 
-                        className="px-4 py-3 rounded-lg focus:outline-none text-neutral-800 h-auto"
+                        className="px-4 py-3 rounded-lg focus:outline-none text-neutral-800 h-auto w-full"
+                        type="email" // Adding for better mobile keyboard
                       />
                     </FormControl>
                     <FormMessage className="text-left text-xs mt-1 text-accent" />
@@ -74,14 +75,14 @@ const NewsletterSection = () => {
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="bg-accent hover:bg-accent-dark text-neutral-900 font-medium px-8 py-3 rounded-lg transition-colors duration-200 h-auto"
+                className="bg-accent hover:bg-accent-dark text-neutral-900 font-medium px-6 sm:px-8 py-3 rounded-lg transition-colors duration-200 h-auto"
               >
                 {isSubmitting ? "Subscribing..." : "Subscribe"}
               </Button>
             </form>
           </Form>
           
-          <p className="text-sm opacity-80 mt-4">We respect your privacy. Unsubscribe at any time.</p>
+          <p className="text-xs sm:text-sm opacity-80 mt-3 sm:mt-4">We respect your privacy. Unsubscribe at any time.</p>
         </div>
       </div>
     </section>
