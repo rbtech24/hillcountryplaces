@@ -214,7 +214,7 @@ const CabinsSection = () => {
     <section id="cabins" className="py-16 bg-neutral-100">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="font-heading text-4xl font-bold mb-4">Stay at Cabins at Flite Acres</h2>
+          <h2 className="font-heading text-4xl font-bold mb-4">Experience Flite Acres Cabins</h2>
           <p className="text-xl text-neutral-800 max-w-3xl mx-auto">
             Enjoy a peaceful retreat in our charming cabins nestled in the natural beauty of Wimberley, Texas.
           </p>
