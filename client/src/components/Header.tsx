@@ -214,92 +214,123 @@ const Header = () => {
           </button>
         </div>
         
-        {/* Mobile Menu */}
-        <div className={`lg:hidden ${mobileMenuOpen ? "block" : "hidden"}`}>
-          <nav className="flex flex-col py-4 space-y-4">
-            <Link href="/destinations" onClick={closeMobileMenu} className="font-medium hover:text-primary transition-colors duration-200">
-              Destinations
-            </Link>
-            
-            {/* Mobile Events dropdown */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="font-medium">Events</span>
-                <button 
-                  onClick={() => {
-                    const eventsMenu = document.getElementById('mobile-events-menu');
-                    eventsMenu?.classList.toggle('hidden');
-                  }}
-                  className="text-gray-500 hover:text-primary focus:outline-none"
-                >
-                  <i className="fas fa-chevron-down text-xs"></i>
-                </button>
-              </div>
-              <div id="mobile-events-menu" className="hidden pl-4 space-y-2">
-                <Link href="/events" onClick={closeMobileMenu} className="block text-gray-600 hover:text-primary">
-                  All Events
-                </Link>
-                <Link href="/calendar-map" onClick={closeMobileMenu} className="block text-gray-600 hover:text-primary">
-                  Calendar & Map
-                </Link>
-              </div>
-            </div>
-            
-            <Link href="/attractions" onClick={closeMobileMenu} className="font-medium hover:text-primary transition-colors duration-200">
-              Attractions
-            </Link>
-            <Link href="/cabins" onClick={closeMobileMenu} className="font-medium hover:text-primary transition-colors duration-200">
-              Cabins
-            </Link>
-            
-            {/* Mobile Plan Your Trip dropdown */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="font-medium">Plan Your Trip</span>
-                <button 
-                  onClick={() => {
-                    const planMenu = document.getElementById('mobile-plan-menu');
-                    planMenu?.classList.toggle('hidden');
-                  }}
-                  className="text-gray-500 hover:text-primary focus:outline-none"
-                >
-                  <i className="fas fa-chevron-down text-xs"></i>
-                </button>
-              </div>
-              <div id="mobile-plan-menu" className="hidden pl-4 space-y-2">
-                <Link href="/blog" onClick={closeMobileMenu} className="block text-gray-600 hover:text-primary">
-                  Travel Tips
-                </Link>
-                <Link href="/quiz" onClick={closeMobileMenu} className="block text-gray-600 hover:text-primary">
-                  <span className="flex items-center">
-                    <span className="mr-1">Experience Quiz</span>
-                    <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs px-1.5 py-0.5 rounded-full">NEW</span>
-                  </span>
-                </Link>
-                <Link href="/travel-assistant" onClick={closeMobileMenu} className="block text-gray-600 hover:text-primary">
-                  <span className="flex items-center">
-                    <span className="mr-1">Travel Assistant</span>
-                    <span className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs px-1.5 py-0.5 rounded-full">AI</span>
-                  </span>
-                </Link>
-              </div>
-            </div>
-            
-            <Link href="/about" onClick={closeMobileMenu} className="font-medium hover:text-primary transition-colors duration-200">
-              About
-            </Link>
-            <Link href="/contact" onClick={closeMobileMenu} className="font-medium hover:text-primary transition-colors duration-200">
-              Contact
-            </Link>
-            <div className="flex items-center pt-2">
-              <button className="p-2 hover:bg-neutral-100 rounded-full transition-colors duration-200">
-                <i className="fas fa-search text-neutral-800"></i>
+        {/* Mobile Menu - Slide-out drawer style */}
+        <div className={`fixed lg:hidden inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-300 ${mobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`} onClick={closeMobileMenu}>
+          <div 
+            className={`fixed top-0 right-0 w-[280px] sm:w-[350px] h-full bg-white shadow-xl overflow-y-auto transform transition-transform duration-300 ease-in-out ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+              <span className="font-heading font-bold text-xl text-primary">Menu</span>
+              <button 
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
+                onClick={closeMobileMenu}
+              >
+                <i className="fas fa-times text-lg"></i>
               </button>
-              <Link href="/cabins" onClick={closeMobileMenu} className="ml-2 bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-md transition-colors duration-200">
-                Book A Cabin
-              </Link>
             </div>
-          </nav>
+            
+            <nav className="flex flex-col p-4 space-y-4">
+              <Link href="/destinations" onClick={closeMobileMenu} className="font-medium hover:text-primary transition-colors duration-200 py-2 border-b border-gray-100">
+                Destinations
+              </Link>
+              
+              {/* Mobile Events dropdown */}
+              <div className="space-y-2 py-2 border-b border-gray-100">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium">Events</span>
+                  <button 
+                    onClick={() => {
+                      const eventsMenu = document.getElementById('mobile-events-menu');
+                      eventsMenu?.classList.toggle('hidden');
+                    }}
+                    className="text-gray-500 hover:text-primary focus:outline-none p-1"
+                  >
+                    <i className="fas fa-chevron-down text-xs"></i>
+                  </button>
+                </div>
+                <div id="mobile-events-menu" className="hidden pl-4 space-y-3 mt-2">
+                  <Link href="/events" onClick={closeMobileMenu} className="block text-gray-600 hover:text-primary">
+                    All Events
+                  </Link>
+                  <Link href="/calendar-map" onClick={closeMobileMenu} className="block text-gray-600 hover:text-primary">
+                    Calendar & Map
+                  </Link>
+                </div>
+              </div>
+              
+              <Link href="/attractions" onClick={closeMobileMenu} className="font-medium hover:text-primary transition-colors duration-200 py-2 border-b border-gray-100">
+                Attractions
+              </Link>
+              <Link href="/cabins" onClick={closeMobileMenu} className="font-medium hover:text-primary transition-colors duration-200 py-2 border-b border-gray-100">
+                Cabins
+              </Link>
+              
+              {/* Mobile Plan Your Trip dropdown */}
+              <div className="space-y-2 py-2 border-b border-gray-100">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium">Plan Your Trip</span>
+                  <button 
+                    onClick={() => {
+                      const planMenu = document.getElementById('mobile-plan-menu');
+                      planMenu?.classList.toggle('hidden');
+                    }}
+                    className="text-gray-500 hover:text-primary focus:outline-none p-1"
+                  >
+                    <i className="fas fa-chevron-down text-xs"></i>
+                  </button>
+                </div>
+                <div id="mobile-plan-menu" className="hidden pl-4 space-y-3 mt-2">
+                  <Link href="/trip-planner" onClick={closeMobileMenu} className="block text-gray-600 hover:text-primary py-1">
+                    <span className="flex items-center">
+                      <span>Trip Planner</span>
+                      <span className="ml-2 bg-gradient-to-r from-green-500 to-teal-500 text-white text-xs px-1.5 py-0.5 rounded-full">NEW</span>
+                    </span>
+                  </Link>
+                  <Link href="/blog" onClick={closeMobileMenu} className="block text-gray-600 hover:text-primary py-1">
+                    Travel Tips
+                  </Link>
+                  <Link href="/quiz" onClick={closeMobileMenu} className="block text-gray-600 hover:text-primary py-1">
+                    <span className="flex items-center">
+                      <span>Experience Quiz</span>
+                      <span className="ml-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs px-1.5 py-0.5 rounded-full">NEW</span>
+                    </span>
+                  </Link>
+                  <Link href="/travel-assistant" onClick={closeMobileMenu} className="block text-gray-600 hover:text-primary py-1">
+                    <span className="flex items-center">
+                      <span>Travel Assistant</span>
+                      <span className="ml-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs px-1.5 py-0.5 rounded-full">AI</span>
+                    </span>
+                  </Link>
+                </div>
+              </div>
+              
+              <Link href="/about" onClick={closeMobileMenu} className="font-medium hover:text-primary transition-colors duration-200 py-2 border-b border-gray-100">
+                About
+              </Link>
+              <Link href="/contact" onClick={closeMobileMenu} className="font-medium hover:text-primary transition-colors duration-200 py-2 border-b border-gray-100">
+                Contact
+              </Link>
+              
+              <div className="pt-4 flex flex-col space-y-3">
+                <div className="relative">
+                  <input 
+                    type="text" 
+                    placeholder="Search..." 
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  />
+                  <i className="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                </div>
+                <Link 
+                  href="/cabins" 
+                  onClick={closeMobileMenu} 
+                  className="bg-primary hover:bg-primary-dark text-white px-4 py-3 rounded-md transition-colors duration-200 text-center font-medium"
+                >
+                  Book A Cabin
+                </Link>
+              </div>
+            </nav>
+          </div>
         </div>
       </div>
     </header>
