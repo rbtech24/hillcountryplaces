@@ -722,22 +722,10 @@ export class MemStorage implements IStorage {
     };
     this.createAdminUser(admin);
     
-    // Create destinations
-    const destinations: InsertDestination[] = [
-      {
-        name: "Fredericksburg",
-        slug: "fredericksburg",
-        description: "Known for its German heritage, wineries, and charming Main Street.",
-        shortDescription: "German heritage and wine country",
-        location: { lat: 30.2752, lng: -98.8719 },
-        imageUrl: "/images/fredericksburg.jpg",
-        featured: true
-      }
-    ];
+    // Create destinations - empty array for now, will be added through admin interface
+    const destinations: InsertDestination[] = [];
     
-    destinations.forEach(dest => {
-      this.createDestination(dest);
-    });
+    // No destinations to create by default
     
     // Create cabins
     const cabins: InsertCabin[] = [
