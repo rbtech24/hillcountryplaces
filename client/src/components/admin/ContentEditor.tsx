@@ -119,6 +119,8 @@ export default function ContentEditor({ initialValue, onSave }: ContentEditorPro
           image_advtab: true,
           media_live_embeds: true,
           paste_data_images: true,
+          content_security_policy: "default-src 'self' 'unsafe-inline' 'unsafe-eval' *.tiny.cloud; img-src * data:; media-src *",
+          referrer_policy: "origin",
         }}
       />
     </div>
