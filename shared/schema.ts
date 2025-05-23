@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, timestamp, json, boolean, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, json, boolean, varchar, date } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -246,8 +246,35 @@ export const insertSiteSettingSchema = createInsertSchema(siteSettings).omit({
   updatedAt: true,
 });
 
+// Newsletter Subscribers
+export const newsletterSubscribers = pgTable("newsletter_subscribers", {
+  id: serial("id").primaryKey(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  firstName: varchar("first_name", { length: 100 }),
+  lastName: varchar("last_name", { length: 100 }),
+  dateSubscribed: timestamp("date_subscribed").defaultNow().notNull(),
+  active: boolean("active").default(true),
+  interests: text("interests").array(),
+});
+
+export const insertNewsletterSubscriberSchema = createInsertSchema(newsletterSubscribers).omit({
+  id: true,
+  dateSubscribed: true,
+});
+
+// Schema for public newsletter subscriptions
+export const newsletterSignupSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().optional(),
+  interests: z.array(z.string()).optional(),
+});
+
 export type SiteSetting = typeof siteSettings.$inferSelect;
 export type InsertSiteSetting = z.infer<typeof insertSiteSettingSchema>;
+
+export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
+export type InsertNewsletterSubscriber = z.infer<typeof insertNewsletterSubscriberSchema>;
 
 // Blog posts
 export const blogPosts = pgTable("blog_posts", {

@@ -11,7 +11,8 @@ import {
   siteSettings, type SiteSetting, type InsertSiteSetting,
   blogPosts, type BlogPost, type InsertBlogPost,
   seasons, type Season, type InsertSeason,
-  seasonalActivities, type SeasonalActivity, type InsertSeasonalActivity
+  seasonalActivities, type SeasonalActivity, type InsertSeasonalActivity,
+  newsletterSubscribers, type NewsletterSubscriber, type InsertNewsletterSubscriber
 } from "@shared/schema";
 
 export interface IStorage {
@@ -20,6 +21,15 @@ export interface IStorage {
   getAdminUserByUsername(username: string): Promise<AdminUser | undefined>;
   createAdminUser(user: InsertAdminUser): Promise<AdminUser>;
   verifyAdminPassword(username: string, password: string): Promise<AdminUser | null>;
+  
+  // Newsletter Subscriber methods
+  getAllNewsletterSubscribers(): Promise<NewsletterSubscriber[]>;
+  getNewsletterSubscriberById(id: number): Promise<NewsletterSubscriber | undefined>;
+  getNewsletterSubscriberByEmail(email: string): Promise<NewsletterSubscriber | undefined>;
+  createNewsletterSubscriber(subscriber: InsertNewsletterSubscriber): Promise<NewsletterSubscriber | null>;
+  updateNewsletterSubscriber(id: number, subscriber: Partial<NewsletterSubscriber>): Promise<NewsletterSubscriber | null>;
+  deleteNewsletterSubscriber(id: number): Promise<boolean>;
+  unsubscribeByEmail(email: string): Promise<boolean>;
   
   // Destination methods
   getAllDestinations(): Promise<Destination[]>;
