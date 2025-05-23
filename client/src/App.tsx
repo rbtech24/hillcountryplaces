@@ -62,6 +62,18 @@ function Router() {
       <Route path="/trip-planner" component={TripPlanner} />
       
       {/* Admin Routes */}
+      <Route path="/admin" component={() => {
+        // Redirect to login or dashboard based on authentication
+        const authData = localStorage.getItem('admin_auth');
+        const isAuthenticated = authData && JSON.parse(authData).authenticated;
+        
+        if (isAuthenticated) {
+          window.location.href = '/admin/dashboard';
+        } else {
+          window.location.href = '/admin/login';
+        }
+        return null;
+      }} />
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/admin/seasonal-content" component={SeasonalContent} />

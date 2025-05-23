@@ -26,7 +26,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { apiRequest } from "@/lib/queryClient";
+// Using direct fetch instead of apiRequest
 
 type NewsletterSubscriber = {
   id: number;
@@ -73,11 +73,14 @@ export function NewsletterSubscriberList() {
   // Update subscriber mutation
   const updateSubscriberMutation = useMutation({
     mutationFn: async (data: { id: number, changes: Partial<NewsletterSubscriber> }) => {
-      const response = await apiRequest(`/api/admin/newsletter/subscribers/${data.id}`, {
+      const response = await fetch(`/api/admin/newsletter/subscribers/${data.id}`, {
         method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(data.changes),
       });
-      return response;
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'newsletter', 'subscribers'] });
@@ -99,10 +102,13 @@ export function NewsletterSubscriberList() {
   // Delete subscriber mutation
   const deleteSubscriberMutation = useMutation({
     mutationFn: async (id: number) => {
-      const response = await apiRequest(`/api/admin/newsletter/subscribers/${id}`, {
+      const response = await fetch(`/api/admin/newsletter/subscribers/${id}`, {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
-      return response;
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'newsletter', 'subscribers'] });
