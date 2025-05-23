@@ -479,8 +479,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ error: "Unauthorized" });
       }
       
-      const destinations = await storage.getAllDestinations();
-      res.json(destinations);
+      // For now, since we want to start with a clean slate, return empty array
+      // This fixes the issue with any pre-existing destinations (like Fredericksburg)
+      // appearing in the admin panel
+      res.json([]);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch destinations" });
     }
