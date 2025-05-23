@@ -556,6 +556,11 @@ export default function AdminDashboard() {
               <SiteImageManager />
             </TabsContent>
             
+            {/* Newsletter Subscribers Tab */}
+            <TabsContent value="subscribers" className="p-4">
+              <SubscribersList />
+            </TabsContent>
+            
             {/* Content for each tab */}
             {["destinations", "attractions", "events", "cabins", "blog"].map((tabValue) => (
               <TabsContent key={tabValue} value={tabValue} className="p-4">
