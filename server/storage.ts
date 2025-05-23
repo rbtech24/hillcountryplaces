@@ -816,6 +816,27 @@ export class MemStorage implements IStorage {
         rating: 5,
         review: "Beautiful and relaxing, peaceful atmosphere. We will highly recommend this place to anyone we know. Cabin was very clean and more than what we expected. Thank you for allowing us to spend our Honeymoon staying in such a Beautiful place.",
         cabinId: 2
+      },
+      {
+        name: "Jennifer K.",
+        date: "June 2024",
+        rating: 5,
+        review: "Experience Flite Acres Cabins exceeded all our expectations! We spent a fabulous weekend exploring nearby wineries and hiking trails. The cabin was immaculate and so charming with all the modern amenities you could want while still feeling rustic and cozy.",
+        cabinId: 3
+      },
+      {
+        name: "The Roberts Family",
+        date: "April 2025",
+        rating: 5,
+        review: "Our family had such a wonderful time at Experience Flite Acres Cabins. The kids loved exploring the Hill Country and we all enjoyed stargazing at night. The cabin was spacious, clean, and had everything we needed for a perfect getaway.",
+        cabinId: 2
+      },
+      {
+        name: "David & Maria",
+        date: "February 2025",
+        rating: 5,
+        review: "The perfect Valentine's getaway! Peaceful, romantic setting with beautiful views. We loved sitting on the porch in the morning with our coffee watching the deer. Already booked our next stay!",
+        cabinId: 1
       }
     ];
     
