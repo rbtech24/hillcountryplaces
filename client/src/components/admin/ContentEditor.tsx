@@ -90,7 +90,7 @@ export default function ContentEditor({ initialValue, onSave }: ContentEditorPro
       </div>
 
       <Editor
-        apiKey="no-api-key"
+        apiKey="vsxa0jsn0xhmac00xmj4sz81e021qjrnz4a23iyvyberhu2q"
         onInit={(evt, editor) => editorRef.current = editor}
         initialValue={initialValue}
         value={content}
@@ -112,6 +112,10 @@ export default function ContentEditor({ initialValue, onSave }: ContentEditorPro
           branding: false,
           resize: true,
           statusbar: true,
+          document_base_url: window.location.origin,
+          convert_urls: false,
+          verify_html: false,
+          extended_valid_elements: "iframe[src|frameborder|style|scrolling|class|width|height|name|align]",
         }}
       />
     </div>
