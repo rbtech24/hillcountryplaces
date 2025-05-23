@@ -81,6 +81,7 @@ export interface IStorage {
   // Subscriber methods
   getAllSubscribers(): Promise<Subscriber[]>;
   addSubscriber(subscriber: InsertSubscriber): Promise<Subscriber>;
+  removeSubscriber(id: number): Promise<boolean>;
   
   // Contact methods
   submitContactForm(submission: InsertContactSubmission): Promise<ContactSubmission>;
@@ -435,6 +436,10 @@ export class MemStorage implements IStorage {
     
     this.subscribersData.set(id, newSubscriber);
     return newSubscriber;
+  }
+  
+  async removeSubscriber(id: number): Promise<boolean> {
+    return this.subscribersData.delete(id);
   }
   
   // Contact methods
