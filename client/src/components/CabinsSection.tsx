@@ -118,30 +118,30 @@ const CabinShowcase = ({ cabin }: { cabin: Cabin }) => {
 
 const OtherCabinCard = ({ cabin }: { cabin: Cabin }) => {
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden h-full flex flex-col">
       <div 
-        className="h-48 bg-cover bg-center" 
+        className="h-40 sm:h-48 bg-cover bg-center" 
         style={{ backgroundImage: `url('${cabin.imageUrl}')` }}
       ></div>
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="font-heading text-lg font-bold">{cabin.name.replace('Cabins at Flite Acres - ', '')}</h3>
+      <div className="p-3 sm:p-4 flex flex-col flex-grow">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-2">
+          <h3 className="font-heading text-base sm:text-lg font-bold">{cabin.name.replace('Cabins at Flite Acres - ', 'Experience Flite Acres - ')}</h3>
           <div className="flex items-center">
-            <i className="fas fa-star text-accent text-sm"></i>
-            <span className="ml-1 text-sm">{(cabin.rating / 10).toFixed(1)} ({cabin.reviewCount})</span>
+            <i className="fas fa-star text-accent text-xs sm:text-sm"></i>
+            <span className="ml-1 text-xs sm:text-sm">{(cabin.rating / 10).toFixed(1)} ({cabin.reviewCount})</span>
           </div>
         </div>
-        <div className="flex flex-wrap gap-2 mb-3">
-          <span className="inline-flex items-center px-2 py-1 bg-neutral-100 rounded-full text-xs">
-            <i className="fas fa-bed mr-1 text-secondary"></i> {cabin.bedrooms} Bedroom
+        <div className="flex flex-wrap gap-1 sm:gap-2 mb-3">
+          <span className="inline-flex items-center px-2 py-0.5 sm:py-1 bg-neutral-100 rounded-full text-xs">
+            <i className="fas fa-bed mr-1 text-secondary text-xs"></i> {cabin.bedrooms} Bedroom
           </span>
-          <span className="inline-flex items-center px-2 py-1 bg-neutral-100 rounded-full text-xs">
-            <i className="fas fa-user-friends mr-1 text-secondary"></i> Sleeps {cabin.sleeps}
+          <span className="inline-flex items-center px-2 py-0.5 sm:py-1 bg-neutral-100 rounded-full text-xs">
+            <i className="fas fa-user-friends mr-1 text-secondary text-xs"></i> Sleeps {cabin.sleeps}
           </span>
         </div>
-        <div className="flex justify-between items-center">
-          <span className="font-bold text-primary">${cabin.price}<span className="text-neutral-600 text-sm font-normal"> / night</span></span>
-          <Link href={`/cabins/${cabin.slug}`} className="text-primary font-medium hover:text-primary-dark">
+        <div className="flex justify-between items-center mt-auto pt-2">
+          <span className="font-bold text-primary text-sm sm:text-base">${cabin.price}<span className="text-neutral-600 text-xs sm:text-sm font-normal"> / night</span></span>
+          <Link href={`/cabins/${cabin.slug}`} className="text-primary text-sm font-medium hover:text-primary-dark px-3 py-1 rounded-md hover:bg-primary-50 transition-colors">
             View Cabin
           </Link>
         </div>
@@ -152,18 +152,18 @@ const OtherCabinCard = ({ cabin }: { cabin: Cabin }) => {
 
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <div className="flex items-center mb-4">
+    <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 h-full flex flex-col">
+      <div className="flex items-center mb-3 sm:mb-4">
         <div className="flex text-accent">
           {[...Array(testimonial.rating)].map((_, i) => (
-            <i key={i} className="fas fa-star"></i>
+            <i key={i} className="fas fa-star text-sm sm:text-base"></i>
           ))}
         </div>
       </div>
-      <p className="italic mb-6">"{testimonial.review}"</p>
-      <div className="flex justify-between items-center border-t border-neutral-200 pt-4">
-        <span className="font-medium">{testimonial.name}</span>
-        <span className="text-sm text-neutral-600">{testimonial.date}</span>
+      <p className="italic text-sm sm:text-base mb-4 sm:mb-6 flex-grow">"{testimonial.review}"</p>
+      <div className="flex justify-between items-center border-t border-neutral-200 pt-3 sm:pt-4 mt-auto">
+        <span className="font-medium text-sm sm:text-base">{testimonial.name}</span>
+        <span className="text-xs sm:text-sm text-neutral-600">{testimonial.date}</span>
       </div>
     </div>
   );
@@ -211,11 +211,11 @@ const CabinsSection = () => {
   const otherCabins = cabins?.filter((cabin: Cabin) => cabin.slug !== 'coyote-cabin') || [];
 
   return (
-    <section id="cabins" className="py-16 bg-neutral-100">
+    <section id="cabins" className="py-10 sm:py-12 md:py-16 bg-neutral-100">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="font-heading text-4xl font-bold mb-4">Experience Flite Acres Cabins</h2>
-          <p className="text-xl text-neutral-800 max-w-3xl mx-auto">
+        <div className="text-center mb-8 sm:mb-10 md:mb-12">
+          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">Experience Flite Acres Cabins</h2>
+          <p className="text-base sm:text-lg md:text-xl text-neutral-800 max-w-3xl mx-auto px-2">
             Enjoy a peaceful retreat in our charming cabins nestled in the natural beauty of Wimberley, Texas.
           </p>
         </div>
@@ -224,7 +224,7 @@ const CabinsSection = () => {
         {cabinsLoading ? (
           <CabinSectionSkeleton />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-10 md:mb-12">
             <CabinFeatures />
             
             <div className="lg:col-span-2">
@@ -233,7 +233,7 @@ const CabinsSection = () => {
               
               {/* More Cabins */}
               {otherCabins.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-4 sm:mt-6">
                   {otherCabins.map((cabin: Cabin) => (
                     <OtherCabinCard key={cabin.id} cabin={cabin} />
                   ))}
@@ -244,13 +244,13 @@ const CabinsSection = () => {
         )}
         
         {/* Testimonials */}
-        <div className="mt-16">
-          <h3 className="font-heading text-3xl font-bold text-center mb-10">What Our Guests Say</h3>
+        <div className="mt-10 sm:mt-12 md:mt-16">
+          <h3 className="font-heading text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-8 md:mb-10">What Our Guests Say</h3>
           
           {testimonialsLoading ? (
             <TestimonialsSkeleton />
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {testimonials?.map((testimonial: Testimonial) => (
                 <TestimonialCard key={testimonial.id} testimonial={testimonial} />
               ))}
