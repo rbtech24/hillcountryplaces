@@ -20,6 +20,7 @@ import {
 import { ImageManager } from "@/components/admin/ImageManager";
 import { SiteSettingsManager } from "@/components/admin/SiteSettingsManager";
 import { SiteImageManager } from "@/components/admin/SiteImageManager";
+import { NewsletterSubscriberList } from "@/components/admin/NewsletterSubscriberList";
 import { apiRequest } from "@/lib/queryClient";
 
 type AdminSession = {
@@ -521,7 +522,7 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-lg shadow">
           <Tabs defaultValue="settings" onValueChange={setCurrentTab}>
             <div className="px-4 py-3 border-b">
-              <TabsList className="grid grid-cols-7">
+              <TabsList className="grid grid-cols-8">
                 <TabsTrigger value="settings">Site Settings</TabsTrigger>
                 <TabsTrigger value="siteImages">Site Images</TabsTrigger>
                 <TabsTrigger value="destinations">Destinations</TabsTrigger>
@@ -529,6 +530,7 @@ export default function AdminDashboard() {
                 <TabsTrigger value="events">Events</TabsTrigger>
                 <TabsTrigger value="cabins">Cabins</TabsTrigger>
                 <TabsTrigger value="blog">Blog</TabsTrigger>
+                <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
               </TabsList>
             </div>
 
@@ -552,6 +554,22 @@ export default function AdminDashboard() {
             {/* Site Images Tab */}
             <TabsContent value="siteImages" className="p-4">
               <SiteImageManager />
+            </TabsContent>
+            
+            {/* Newsletter Tab */}
+            <TabsContent value="newsletter" className="p-4">
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-2xl font-bold">Newsletter Subscribers</h2>
+                </div>
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="overflow-x-auto">
+                      <NewsletterSubscriberList />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
             
             {/* Content for each tab */}
