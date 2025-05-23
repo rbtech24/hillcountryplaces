@@ -25,13 +25,7 @@ export const images = pgTable("images", {
   id: serial("id").primaryKey(),
   url: text("url").notNull().unique(),
   alt: text("alt").notNull(),
-  cloudinaryId: text("cloudinary_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
-export const insertImageSchema = createInsertSchema(images).omit({
-  id: true,
-  createdAt: true,
 });
 
 // Destinations
@@ -161,7 +155,10 @@ export const contactFormSchema = createInsertSchema(contactSubmissions).pick({
   message: true,
 });
 
-// Removed duplicate insertImageSchema definition
+export const insertImageSchema = createInsertSchema(images).omit({
+  id: true,
+  createdAt: true,
+});
 
 // Seasons Table
 export const seasons = pgTable("seasons", {

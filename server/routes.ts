@@ -223,39 +223,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Admin routes
-  // Newsletter subscribers admin routes
-  app.get("/api/admin/subscribers", async (req: Request, res: Response) => {
-    try {
-      if (!req.session.authenticated) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-      const subscribers = await storage.getAllSubscribers();
-      res.json(subscribers);
-    } catch (error) {
-      console.error("Error fetching subscribers:", error);
-      res.status(500).json({ message: "Failed to fetch subscribers" });
-    }
-  });
-  
-  app.delete("/api/admin/subscribers/:id", async (req: Request, res: Response) => {
-    try {
-      if (!req.session.authenticated) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-      const { id } = req.params;
-      const result = await storage.removeSubscriber(parseInt(id, 10));
-      
-      if (result) {
-        res.json({ success: true, message: "Subscriber removed successfully" });
-      } else {
-        res.status(404).json({ message: "Subscriber not found" });
-      }
-    } catch (error) {
-      console.error("Error deleting subscriber:", error);
-      res.status(500).json({ message: "Failed to delete subscriber" });
-    }
-  });
-  
   app.post("/api/admin/login", async (req: Request, res: Response) => {
     try {
       const { username, password } = req.body;

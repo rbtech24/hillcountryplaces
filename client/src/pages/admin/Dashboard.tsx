@@ -20,7 +20,6 @@ import {
 import { ImageManager } from "@/components/admin/ImageManager";
 import { SiteSettingsManager } from "@/components/admin/SiteSettingsManager";
 import { SiteImageManager } from "@/components/admin/SiteImageManager";
-import SubscribersList from "@/components/admin/SubscribersList";
 import { apiRequest } from "@/lib/queryClient";
 
 type AdminSession = {
@@ -530,7 +529,6 @@ export default function AdminDashboard() {
                 <TabsTrigger value="events">Events</TabsTrigger>
                 <TabsTrigger value="cabins">Cabins</TabsTrigger>
                 <TabsTrigger value="blog">Blog</TabsTrigger>
-                <TabsTrigger value="subscribers">Newsletter</TabsTrigger>
               </TabsList>
             </div>
 
@@ -554,11 +552,6 @@ export default function AdminDashboard() {
             {/* Site Images Tab */}
             <TabsContent value="siteImages" className="p-4">
               <SiteImageManager />
-            </TabsContent>
-            
-            {/* Newsletter Subscribers Tab */}
-            <TabsContent value="subscribers" className="p-4">
-              <SubscribersList />
             </TabsContent>
             
             {/* Content for each tab */}

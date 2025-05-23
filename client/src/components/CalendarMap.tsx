@@ -363,14 +363,10 @@ const CalendarMap: React.FC<CalendarMapProps> = ({
                 const category = event.category || 'General';
                 const eventIcon = categoryIcons[category] || customIcon;
                 
-                // Make sure coordinates are in the format Leaflet expects [lat, lng]
-                // This fixes the "Objects are not valid as React children" error
-                const position = Array.isArray(coordinates) ? coordinates : [coordinates.lat || 30.2672, coordinates.lng || -97.7431];
-                
                 return (
                   <Marker 
                     key={`${event.id}-${index}`} 
-                    position={position}
+                    position={coordinates}
                     icon={eventIcon}
                   >
                     <Popup>
