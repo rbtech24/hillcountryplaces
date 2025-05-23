@@ -148,6 +148,10 @@ export class MemStorage implements IStorage {
   private seasonId = 1;
   private seasonalActivityId = 1;
 
+  // Newsletter subscriber storage
+  private newsletterSubscribersData: Map<number, NewsletterSubscriber>;
+  private newsletterSubscriberId = 1;
+
   constructor() {
     this.adminUsersData = new Map();
     this.destinationsData = new Map();
@@ -158,6 +162,7 @@ export class MemStorage implements IStorage {
     this.subscribersData = new Map();
     this.contactSubmissionsData = new Map();
     this.imagesData = new Map();
+    this.newsletterSubscribersData = new Map();
     this.siteSettingsData = new Map();
     this.blogPostsData = new Map();
     this.seasonsData = new Map();
@@ -634,6 +639,78 @@ export class MemStorage implements IStorage {
 
   async deleteSeasonalActivity(id: number): Promise<boolean> {
     return this.seasonalActivitiesData.delete(id);
+  }
+  
+  // Newsletter subscriber methods
+  async getAllNewsletterSubscribers(): Promise<NewsletterSubscriber[]> {
+    return Array.from(this.newsletterSubscribersData.values())
+      .sort((a, b) => b.dateSubscribed.getTime() - a.dateSubscribed.getTime());
+  }
+  
+  async getNewsletterSubscriberById(id: number): Promise<NewsletterSubscriber | undefined> {
+    return this.newsletterSubscribersData.get(id);
+  }
+  
+  async getNewsletterSubscriberByEmail(email: string): Promise<NewsletterSubscriber | undefined> {
+    return Array.from(this.newsletterSubscribersData.values())
+      .find(subscriber => subscriber.email.toLowerCase() === email.toLowerCase());
+  }
+  
+  async createNewsletterSubscriber(data: InsertNewsletterSubscriber): Promise<NewsletterSubscriber> {
+    // Check if email already exists
+    const existingSubscriber = await this.getNewsletterSubscriberByEmail(data.email);
+    if (existingSubscriber) {
+      if (!existingSubscriber.active) {
+        // Reactivate subscriber
+        const updatedSubscriber = {
+          ...existingSubscriber,
+          active: true,
+          interests: data.interests || existingSubscriber.interests,
+          firstName: data.firstName || existingSubscriber.firstName,
+          lastName: data.lastName || existingSubscriber.lastName,
+        };
+        this.newsletterSubscribersData.set(existingSubscriber.id, updatedSubscriber);
+        return updatedSubscriber;
+      }
+      return existingSubscriber;
+    }
+    
+    // Create new subscriber
+    const id = this.newsletterSubscriberId++;
+    const newSubscriber: NewsletterSubscriber = {
+      id,
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName || null,
+      dateSubscribed: new Date(),
+      active: true,
+      interests: data.interests || [],
+    };
+    
+    this.newsletterSubscribersData.set(id, newSubscriber);
+    return newSubscriber;
+  }
+  
+  async updateNewsletterSubscriber(id: number, data: Partial<NewsletterSubscriber>): Promise<NewsletterSubscriber | null> {
+    const subscriber = this.newsletterSubscribersData.get(id);
+    if (!subscriber) return null;
+    
+    const updatedSubscriber = { ...subscriber, ...data };
+    this.newsletterSubscribersData.set(id, updatedSubscriber);
+    return updatedSubscriber;
+  }
+  
+  async deleteNewsletterSubscriber(id: number): Promise<boolean> {
+    const success = this.newsletterSubscribersData.delete(id);
+    return success;
+  }
+  
+  async unsubscribeByEmail(email: string): Promise<boolean> {
+    const subscriber = await this.getNewsletterSubscriberByEmail(email);
+    if (!subscriber) return false;
+    
+    return this.updateNewsletterSubscriber(subscriber.id, { active: false })
+      .then(result => !!result);
   }
   
   private initializeData() {

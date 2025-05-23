@@ -1,406 +1,174 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { CalendarClock, CheckCircle2, Loader2 } from 'lucide-react';
-import { 
-  Form, 
-  FormControl, 
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage 
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { insertSubscriberSchema } from '@shared/schema';
-import { useApiMutation } from '@/lib/queryClient';
-import { 
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
-import { toast } from '@/hooks/use-toast';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { newsletterSignupSchema } from "@shared/schema";
+type NewsletterSignup = {
+  email: string;
+  firstName: string;
+  lastName?: string;
+  interests?: string[];
+};
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 
-// Extend the subscriber schema with validation
-const newsletterFormSchema = insertSubscriberSchema.extend({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  receiveCalendarUpdates: z.boolean().default(true),
-  termsAccepted: z.boolean().refine(val => val === true, {
-    message: "You must accept the terms to subscribe"
-  })
-});
+// Define default interests
+const INTEREST_OPTIONS = [
+  { id: "events", label: "Events & Festivals" },
+  { id: "attractions", label: "Attractions & Activities" },
+  { id: "accommodations", label: "Accommodations" },
+  { id: "seasonal", label: "Seasonal Updates" }
+];
 
-type NewsletterFormValues = z.infer<typeof newsletterFormSchema>;
+export default function NewsletterSignup() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
-interface NewsletterSignupProps {
-  className?: string;
-  variant?: 'default' | 'sidebar' | 'footer';
-}
-
-const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ 
-  className = '', 
-  variant = 'default' 
-}) => {
-  const [isSuccess, setIsSuccess] = useState(false);
-  
-  const form = useForm<NewsletterFormValues>({
-    resolver: zodResolver(newsletterFormSchema),
+  const form = useForm<NewsletterSignup>({
+    resolver: zodResolver(newsletterSignupSchema),
     defaultValues: {
-      email: '',
-      receiveCalendarUpdates: true,
-      termsAccepted: false
+      email: "",
+      firstName: "",
+      lastName: "",
+      interests: []
     }
   });
-  
-  const subscribeMutation = useApiMutation({
-    url: '/api/subscribe',
-    method: 'POST',
-    onSuccess: () => {
-      setIsSuccess(true);
-      toast({
-        title: "Subscription successful",
-        description: "You've been added to our newsletter list!",
-        variant: "default",
+
+  async function onSubmit(data: NewsletterSignup) {
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/newsletter/subscribe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to subscribe");
+      }
+
+      toast({
+        title: "Subscription successful!",
+        description: "Thank you for subscribing to our newsletter."
+      });
+
       form.reset();
-    },
-    onError: (error) => {
+    } catch (error) {
       toast({
         title: "Subscription failed",
-        description: error?.message || "There was an error subscribing you to the newsletter.",
-        variant: "destructive",
+        description: error instanceof Error ? error.message : "Please try again later",
+        variant: "destructive"
       });
+    } finally {
+      setIsSubmitting(false);
     }
-  });
-  
-  const onSubmit = (data: NewsletterFormValues) => {
-    subscribeMutation.mutate({
-      email: data.email,
-      receiveCalendarUpdates: data.receiveCalendarUpdates
-    });
-  };
-  
-  // Different layouts based on the variant
-  if (variant === 'sidebar') {
-    return (
-      <Card className={`${className}`}>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-xl font-bold">Stay Updated</CardTitle>
-          <CardDescription>
-            Get the latest Hill Country events straight to your inbox
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {isSuccess ? (
-            <div className="flex flex-col items-center justify-center py-4 text-center">
-              <CheckCircle2 className="h-12 w-12 text-green-500 mb-3" />
-              <h3 className="text-lg font-semibold mb-1">Thanks for subscribing!</h3>
-              <p className="text-sm text-gray-600">
-                You'll receive updates about new events and happenings in the Hill Country.
-              </p>
-            </div>
-          ) : (
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="your@email.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="receiveCalendarUpdates"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-2 space-y-0 rounded-md border p-4">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>
-                          Receive Google Calendar updates
-                        </FormLabel>
-                        <p className="text-sm text-gray-500">
-                          Get notified when new events are added to our calendar
-                        </p>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="termsAccepted"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-2 space-y-0">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>
-                          I agree to receive emails
-                        </FormLabel>
-                        <FormMessage />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                
-                <Button 
-                  type="submit" 
-                  className="w-full"
-                  disabled={subscribeMutation.isPending}
-                >
-                  {subscribeMutation.isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Subscribing...
-                    </>
-                  ) : (
-                    <>Subscribe</>
-                  )}
-                </Button>
-              </form>
-            </Form>
-          )}
-        </CardContent>
-      </Card>
-    );
   }
-  
-  // Footer variant
-  if (variant === 'footer') {
-    return (
-      <div className={`${className}`}>
-        <h3 className="text-lg font-semibold mb-3">Subscribe to our Newsletter</h3>
-        {isSuccess ? (
-          <div className="flex items-center space-x-2 text-sm">
-            <CheckCircle2 className="h-4 w-4 text-green-500" />
-            <span>Thanks for subscribing!</span>
-          </div>
-        ) : (
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-              <div className="flex space-x-2">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormControl>
-                        <Input placeholder="Enter your email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button 
-                  type="submit" 
-                  disabled={subscribeMutation.isPending || !form.formState.isValid}
-                >
-                  {subscribeMutation.isPending ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    'Subscribe'
-                  )}
-                </Button>
-              </div>
-              
-              <div className="flex space-x-4">
-                <FormField
-                  control={form.control}
-                  name="receiveCalendarUpdates"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center space-x-1.5 space-y-0">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-0 leading-none">
-                        <FormLabel className="text-xs">
-                          Receive calendar updates
-                        </FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="termsAccepted"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center space-x-1.5 space-y-0">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-0 leading-none">
-                        <FormLabel className="text-xs">
-                          I agree to receive emails
-                        </FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormMessage />
-            </form>
-          </Form>
-        )}
-      </div>
-    );
-  }
-  
-  // Default variant
+
   return (
-    <div className={`bg-primary-50 rounded-xl shadow-lg overflow-hidden ${className}`}>
-      <div className="p-6 md:p-8 md:flex items-start space-y-6 md:space-y-0 md:space-x-8">
-        <div className="md:w-2/5">
-          <div className="flex items-center mb-3">
-            <CalendarClock className="h-7 w-7 text-primary mr-2" />
-            <h2 className="text-2xl font-bold text-primary">Stay Connected</h2>
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <h3 className="text-xl font-semibold mb-4 text-primary">Subscribe to Our Newsletter</h3>
+      <p className="text-gray-600 mb-6">
+        Stay updated with the latest events, attractions, and special offers in Texas Hill Country!
+      </p>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="John" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
-          <p className="text-gray-700 mb-4">
-            Subscribe to our newsletter and get the latest Hill Country events, attractions, and special offers delivered straight to your inbox.
-          </p>
-          <div className="flex items-center text-sm text-gray-600 space-x-2">
-            <CheckCircle2 className="h-5 w-5 text-green-500" />
-            <span>Google Calendar event updates</span>
-          </div>
-          <div className="flex items-center text-sm text-gray-600 space-x-2 mt-1">
-            <CheckCircle2 className="h-5 w-5 text-green-500" />
-            <span>Seasonal highlights & local tips</span>
-          </div>
-          <div className="flex items-center text-sm text-gray-600 space-x-2 mt-1">
-            <CheckCircle2 className="h-5 w-5 text-green-500" />
-            <span>Special offers from local businesses</span>
-          </div>
-        </div>
-        
-        <div className="md:w-3/5 bg-white rounded-lg shadow-sm p-6">
-          {isSuccess ? (
-            <div className="flex flex-col items-center justify-center py-6 text-center">
-              <CheckCircle2 className="h-16 w-16 text-green-500 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Thanks for subscribing!</h3>
-              <p className="text-gray-600 mb-4">
-                You've been added to our newsletter. We'll keep you updated with all the latest events and attractions in the Texas Hill Country.
-              </p>
-              <Button 
-                variant="outline"
-                onClick={() => setIsSuccess(false)}
-              >
-                Subscribe another email
-              </Button>
+
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="john.doe@example.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="space-y-2">
+            <FormLabel>I'm interested in (optional)</FormLabel>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {INTEREST_OPTIONS.map((option) => (
+                <FormField
+                  key={option.id}
+                  control={form.control}
+                  name="interests"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value?.includes(option.id)}
+                          onCheckedChange={(checked) => {
+                            return checked
+                              ? field.onChange([...field.value || [], option.id])
+                              : field.onChange(
+                                  field.value?.filter(
+                                    (value) => value !== option.id
+                                  ) || []
+                                );
+                          }}
+                        />
+                      </FormControl>
+                      <FormLabel className="font-normal cursor-pointer">
+                        {option.label}
+                      </FormLabel>
+                    </FormItem>
+                  )}
+                />
+              ))}
             </div>
-          ) : (
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email address</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter your email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="receiveCalendarUpdates"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-2 space-y-0 border rounded-md p-4">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>
-                          Subscribe to Google Calendar updates
-                        </FormLabel>
-                        <p className="text-sm text-gray-500">
-                          Get notifications when new events are added to our calendar
-                        </p>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="termsAccepted"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-2 space-y-0">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>
-                          I agree to receive email communications from Texas Hill Country Guide
-                        </FormLabel>
-                        <p className="text-xs text-gray-500">
-                          You can unsubscribe at any time by clicking the link in the footer of our emails
-                        </p>
-                        <FormMessage />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                
-                <Button 
-                  type="submit" 
-                  size="lg"
-                  className="w-full md:w-auto"
-                  disabled={subscribeMutation.isPending}
-                >
-                  {subscribeMutation.isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Subscribing...
-                    </>
-                  ) : (
-                    <>Subscribe to Newsletter</>
-                  )}
-                </Button>
-              </form>
-            </Form>
-          )}
-        </div>
-      </div>
+          </div>
+
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Subscribing...
+              </>
+            ) : (
+              "Subscribe Now"
+            )}
+          </Button>
+        </form>
+      </Form>
     </div>
   );
-};
-
-export default NewsletterSignup;
+}

@@ -1,7 +1,7 @@
 import express, { type Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertSubscriberSchema, contactFormSchema } from "@shared/schema";
+import { insertSubscriberSchema, contactFormSchema, newsletterSignupSchema } from "@shared/schema";
 import { uploadSingleImage } from "./upload";
 import path from "path";
 import { fileURLToPath } from 'url';
@@ -1002,6 +1002,135 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Weather API endpoint
   app.get("/api/weather/:location", getWeatherData);
+
+  // Newsletter routes - public
+  app.post("/api/newsletter/subscribe", async (req, res) => {
+    try {
+      const data = newsletterSignupSchema.parse(req.body);
+      
+      // Check if email already exists
+      const existingSubscriber = await storage.getNewsletterSubscriberByEmail(data.email);
+      if (existingSubscriber && existingSubscriber.active) {
+        return res.status(400).json({ message: "This email is already subscribed to our newsletter." });
+      }
+      
+      // Create or reactivate subscriber
+      const subscriber = await storage.createNewsletterSubscriber({
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        interests: data.interests || []
+      });
+      
+      if (!subscriber) {
+        return res.status(500).json({ message: "Failed to subscribe. Please try again later." });
+      }
+      
+      res.status(201).json({ message: "Successfully subscribed to the newsletter!" });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ message: "Invalid subscription data", errors: error.errors });
+      }
+      console.error("Error subscribing to newsletter:", error);
+      res.status(500).json({ message: "An error occurred. Please try again later." });
+    }
+  });
+
+  // Unsubscribe route (public)
+  app.get("/api/newsletter/unsubscribe/:email", async (req, res) => {
+    try {
+      const email = decodeURIComponent(req.params.email);
+      const success = await storage.unsubscribeByEmail(email);
+      
+      if (success) {
+        res.status(200).json({ message: "You have been successfully unsubscribed." });
+      } else {
+        res.status(404).json({ message: "Email not found in our subscription list." });
+      }
+    } catch (error) {
+      console.error("Error unsubscribing:", error);
+      res.status(500).json({ message: "An error occurred. Please try again later." });
+    }
+  });
+
+  // Admin authentication middleware
+  const checkAdminAuth = (req: Request, res: Response, next: NextFunction) => {
+    if (!req.session?.adminId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    next();
+  };
+  
+  // Newsletter admin routes - protected
+  app.get("/api/admin/newsletter/subscribers", checkAdminAuth, async (req, res) => {
+    try {
+      const subscribers = await storage.getAllNewsletterSubscribers();
+      res.json(subscribers);
+    } catch (error) {
+      console.error("Error fetching newsletter subscribers:", error);
+      res.status(500).json({ message: "Failed to fetch subscribers" });
+    }
+  });
+
+  app.get("/api/admin/newsletter/subscribers/:id", checkAdminAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const subscriber = await storage.getNewsletterSubscriberById(id);
+      
+      if (!subscriber) {
+        return res.status(404).json({ message: "Subscriber not found" });
+      }
+      
+      res.json(subscriber);
+    } catch (error) {
+      console.error("Error fetching newsletter subscriber:", error);
+      res.status(500).json({ message: "Failed to fetch subscriber" });
+    }
+  });
+
+  app.put("/api/admin/newsletter/subscribers/:id", checkAdminAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const subscriber = await storage.getNewsletterSubscriberById(id);
+      
+      if (!subscriber) {
+        return res.status(404).json({ message: "Subscriber not found" });
+      }
+      
+      const updatedSubscriber = await storage.updateNewsletterSubscriber(id, req.body);
+      
+      if (!updatedSubscriber) {
+        return res.status(500).json({ message: "Failed to update subscriber" });
+      }
+      
+      res.json(updatedSubscriber);
+    } catch (error) {
+      console.error("Error updating newsletter subscriber:", error);
+      res.status(500).json({ message: "Failed to update subscriber" });
+    }
+  });
+
+  app.delete("/api/admin/newsletter/subscribers/:id", checkAdminAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const subscriber = await storage.getNewsletterSubscriberById(id);
+      
+      if (!subscriber) {
+        return res.status(404).json({ message: "Subscriber not found" });
+      }
+      
+      const success = await storage.deleteNewsletterSubscriber(id);
+      
+      if (!success) {
+        return res.status(500).json({ message: "Failed to delete subscriber" });
+      }
+      
+      res.status(204).end();
+    } catch (error) {
+      console.error("Error deleting newsletter subscriber:", error);
+      res.status(500).json({ message: "Failed to delete subscriber" });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;
