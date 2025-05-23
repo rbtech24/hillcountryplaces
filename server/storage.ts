@@ -738,6 +738,102 @@ export class MemStorage implements IStorage {
     destinations.forEach(dest => {
       this.createDestination(dest);
     });
+    
+    // Create cabins
+    const cabins: InsertCabin[] = [
+      {
+        name: "Coyote Cabin",
+        slug: "coyote-cabin",
+        description: "Our cozy Coyote Cabin offers a perfect retreat for couples looking to enjoy the serenity of the Hill Country. This charming cabin features a comfortable queen bed, full kitchen, and a private porch overlooking the countryside.",
+        shortDescription: "Cozy retreat perfect for couples with beautiful Hill Country views",
+        imageUrl: "https://images.unsplash.com/photo-1516402707257-787c50fc3898?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=750&q=80",
+        imageUrls: [
+          "https://images.unsplash.com/photo-1516402707257-787c50fc3898?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=750&q=80",
+          "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=750&q=80",
+          "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=750&q=80"
+        ],
+        bedrooms: 1,
+        bathrooms: 1,
+        sleeps: 2,
+        price: 145,
+        features: [
+          "Queen bed with luxury linens",
+          "Full kitchen with all appliances",
+          "Private porch with Hill Country views",
+          "Fireplace",
+          "Free WiFi",
+          "Smart TV with streaming services"
+        ],
+        rating: 49,
+        reviewCount: 27,
+        location: "Wimberley",
+        bookingUrl: "https://example.com/book/coyote-cabin",
+        featured: true
+      },
+      {
+        name: "Bluebonnet Lodge",
+        slug: "bluebonnet-lodge",
+        description: "Experience the beauty of the Texas Hill Country at our spacious Bluebonnet Lodge. With two bedrooms, a large living area, and a stunning outdoor space, this cabin is perfect for families or small groups wanting to enjoy everything Wimberley has to offer.",
+        shortDescription: "Spacious two-bedroom lodge ideal for families and small groups",
+        imageUrl: "https://images.unsplash.com/photo-1551927336-09d50efd69cd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=750&q=80",
+        imageUrls: [
+          "https://images.unsplash.com/photo-1551927336-09d50efd69cd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=750&q=80",
+          "https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=750&q=80",
+          "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=750&q=80"
+        ],
+        bedrooms: 2,
+        bathrooms: 2,
+        sleeps: 4,
+        price: 225,
+        features: [
+          "Two bedrooms with comfortable beds",
+          "Two full bathrooms",
+          "Fully equipped kitchen",
+          "Spacious living area",
+          "Large deck with outdoor seating",
+          "BBQ grill",
+          "Free WiFi and Smart TV"
+        ],
+        rating: 48,
+        reviewCount: 18,
+        location: "Wimberley",
+        bookingUrl: "https://example.com/book/bluebonnet-lodge",
+        featured: true
+      }
+    ];
+    
+    cabins.forEach(cabin => {
+      this.createCabin(cabin);
+    });
+    
+    // Create testimonials
+    const testimonials: InsertTestimonial[] = [
+      {
+        name: "Amy N.",
+        date: "May 2025",
+        rating: 5,
+        review: "Very clean little cabin with just enough space for 2. Close to town and far enough away to enjoy the quiet. I would definitely recommend and stay here again.",
+        cabinId: 1
+      },
+      {
+        name: "McNeal's",
+        date: "March 2025",
+        rating: 5,
+        review: "Just the right amount of space for a couples getaway! Close to everything you need but still feels far from the hustle and bustle. Sitting out by the chiminea at night up under the stars was our favorite part!",
+        cabinId: 1
+      },
+      {
+        name: "Harry & Scottie G.",
+        date: "August 2024",
+        rating: 5,
+        review: "Beautiful and relaxing, peaceful atmosphere. We will highly recommend this place to anyone we know. Cabin was very clean and more than what we expected. Thank you for allowing us to spend our Honeymoon staying in such a Beautiful place.",
+        cabinId: 2
+      }
+    ];
+    
+    testimonials.forEach(testimonial => {
+      this.createTestimonial(testimonial);
+    });
   }
 }
 
