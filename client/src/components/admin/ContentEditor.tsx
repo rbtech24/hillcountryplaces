@@ -101,13 +101,13 @@ export default function ContentEditor({ initialValue, onSave }: ContentEditorPro
           plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
             'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+            'insertdatetime', 'media', 'table', 'help', 'wordcount', 'emoticons'
           ],
           toolbar:
             'undo redo | blocks | ' +
-            'bold italic forecolor | alignleft aligncenter ' +
+            'bold italic underline forecolor backcolor | alignleft aligncenter ' +
             'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | help',
+            'image media link emoticons | removeformat | code help',
           content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px }',
           branding: false,
           resize: true,
@@ -116,6 +116,9 @@ export default function ContentEditor({ initialValue, onSave }: ContentEditorPro
           convert_urls: false,
           verify_html: false,
           extended_valid_elements: "iframe[src|frameborder|style|scrolling|class|width|height|name|align]",
+          image_advtab: true,
+          media_live_embeds: true,
+          paste_data_images: true,
         }}
       />
     </div>
