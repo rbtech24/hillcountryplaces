@@ -122,8 +122,8 @@ const TravelAssistant: React.FC = () => {
       </div>
       
       <Card className="shadow-lg rounded-lg overflow-hidden">
-        {/* Chat messages area */}
-        <div className="h-[60vh] overflow-y-auto p-4 space-y-4 bg-gray-50">
+        {/* Chat messages area with fixed height to prevent page shifting */}
+        <div className="h-[60vh] min-h-[500px] overflow-y-auto p-4 space-y-4 bg-gray-50">
           {messages.map((message, index) => (
             <div
               key={index}

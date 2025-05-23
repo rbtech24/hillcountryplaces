@@ -113,7 +113,7 @@ const AllCabins = () => {
         
         <div className="container mx-auto px-4 h-full flex items-center relative z-10">
           <div className="max-w-3xl text-white">
-            <h1 className="font-heading text-4xl md:text-5xl font-bold mb-4">Cabins at Flite Acres</h1>
+            <h1 className="font-heading text-4xl md:text-5xl font-bold mb-4">Experience Flite Acres Cabins</h1>
             <p className="text-xl md:text-2xl">Enjoy a peaceful retreat in our charming cabins nestled in the natural beauty of Wimberley, Texas.</p>
           </div>
         </div>
